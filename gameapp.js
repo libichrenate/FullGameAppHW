@@ -68,17 +68,24 @@ gameApp.prototype.createGame = function () {
       console.log(err);
     });
 };
+
+const encodeFormData = (data) => {
+  return Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
+};
+
 gameApp.prototype.saveGamesOnServer = function (post) {
-  const promise = fetch("https://games-world.herokuapp.com" + "/games", {
+  const promise = fetch("https://games-world.herokuapp.com/games", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/x-www-form-url-encoded",
+      Accept: "application/json",
     },
-    body: JSON.stringify(post),
-  }).then(function (response) {
-    return response.json();
-  });
-
+    body: encodeFormData(post),
+  })
+    .then((response) => console.log(response))
+    .catch((error) => console.log(error));
   return promise;
 };
 
